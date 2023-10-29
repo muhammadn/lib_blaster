@@ -17,10 +17,11 @@
 //! The packet sender
 
 use super::builder::Pkt;
-use pnet_packet::ip::IpNextHeaderProtocols::Tcp;
+use pnet_packet::ip::IpNextHeaderProtocols;
 use pnet_transport;
 use pnet_transport::transport_channel;
-use pnet_transport::TransportChannelType::Layer3;
+use pnet_transport::TransportChannelType::Layer4;
+use pnet_transport::TransportProtocol::Ipv4;
 use std::io;
 use std::net::IpAddr;
 
@@ -32,7 +33,7 @@ pub struct Sender {
 impl Sender {
     /// Create a sender
     pub fn new() -> Result<Self, io::Error> {
-        let (tx, _) = transport_channel(100, Layer3(Tcp))?;
+        let (tx, _) = transport_channel(100, Layer4(Ipv4(IpNextHeaderProtocols::Tcp)))?;
         Ok(Self { tx })
     }
 
